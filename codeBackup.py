@@ -1,0 +1,144 @@
+import PIL.ImageGrab
+import PIL.ImageOps
+from numpy import *
+import os
+import time
+import win32api, win32con
+
+#camDistance is 874
+#camPitch is 66
+#outline on
+#maximumGraphic
+
+shopStatus = True
+gold = 1
+level = 1
+ 
+round = 1
+
+bench = {
+    1 : (432,982),
+    2 : (583,981),
+    3 : (736,981),
+    4 : (888,981),
+    5 : (1024,981),
+    6 : (1180,981),
+    7 : (1322,981),
+    8 : (1472,981)
+    }
+
+shopBound = {
+    ## width is 213, height is 68
+    ## y is 192
+    1 : 175,
+    2 : 495,
+    3 : 816,
+    4 : 1135,
+    5 : 1455
+    }
+
+heroValueInShop = {
+        "venomancer" : 34256,
+        "tusk" : 30561        
+    }
+
+ui = {
+    "shopStatus" : (1717,954,1717+64,954+60),
+    "gold" : (1651,964,1651+28,964+31),
+    "level" : (1815,594,1815+28,594+45),
+    "round" : (1622,14,1622+91,14+48),    
+    }
+
+uiValue = {
+    "shopStatus" : 13944
+    "gold" : 14556,
+    "level" : 14164,
+    }
+
+def getShopValue():
+    for i in range(1,6):
+        grabShop(i)
+
+def grabUI(element):
+    box = ui[element]
+    im = PIL.ImageOps.grayscale(PIL.ImageGrab.grab(box))
+    a = array(im.getcolors())
+    a = a.sum()
+    print(a)
+    im.save(os.getcwd() + '\\ui__' + element + '___' + str(int(time.time())) + '.png', 'PNG')   
+
+
+def grabShop(slot):
+    box = (shopBound[slot],195,shopBound[slot]+184,195+60)
+    im = PIL.ImageOps.grayscale(PIL.ImageGrab.grab(box))
+    a = array(im.getcolors())
+    a = a.sum()
+    print(a)
+    im.save(os.getcwd() + '\\seat__' + str(slot) + '___' + str(int(time.time())) + '.png', 'PNG')   
+
+def bench_select(slot):
+    mousePos(bench[slot])
+    leftClick()
+    time.sleep(0.1)
+     
+def screenGrab():
+    box = ()
+    im = PIL.ImageGrab.grab()
+    ##im.save(os.getcwd() + '\\full_snap__' + str(int(time.time())) + '.png', 'PNG')
+    return im
+
+def grab():
+    box = ()
+    im = PIL.ImageOps.grayscale(PIL.ImageGrab.grab())
+    a = array(im.getcolors())
+    a = a.sum()
+    print(a)
+    return a
+
+def leftClick():
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,0,0)
+    time.sleep(.1)
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,0,0)
+    print('left clicked')
+
+def leftDown():
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,0,0)
+    time.sleep(.1)
+    print('left Down')
+
+def leftUp():
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,0,0)
+    time.sleep(.1)
+    print('left release')
+
+def mousePos(cord):
+    win32api.SetCursorPos((cord[0], cord[1]))
+
+def get_cords():
+    x,y = win32api.GetCursorPos()
+    x = x
+    y = y
+    print(x,y)
+
+def startGame():
+    #location of first menu
+    mousePos((355, 917))
+    leftClick()
+    time.sleep(.1)
+     
+    #location of second menu
+    mousePos((963, 562))
+    leftClick()
+    time.sleep(.1)
+     
+    #location of third menu
+    mousePos((1469, 417))
+    leftClick()
+    time.sleep(.1)
+
+ 
+def main():
+    pass
+ 
+if __name__ == '__main__':
+    main()
